@@ -37,6 +37,11 @@ board.get("/get_memo_by_id", async (c) => {
     msg: "",
   };
   try {
+    // 1. 쿼리 스트링에서 'id' 값 가져오기
+    const id = Number(c?.req?.query("id") ?? 0);
+    const boardRepo = AppDataSource.getRepository(TBoard);
+    let data = await boardRepo.findOne({ where: { id: id } });
+    result.data = data;
     return c.json(result);
   } catch (error: any) {
     result.success = false;
