@@ -50,4 +50,20 @@ board.get("/get_memo_by_id", async (c) => {
   }
 });
 
+// t_board 에 데이터 추가&수정 기능 만들기
+board.post("/upsert", async (c) => {
+  let result: ResultType = {
+    success: true,
+    data: null,
+    msg: "",
+  };
+  try {
+    return c.json(result);
+  } catch (error: any) {
+    result.success = false;
+    result.msg = `서버 에러. ${error?.message}`;
+    return c.json(result);
+  }
+});
+
 export default board;
