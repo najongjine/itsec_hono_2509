@@ -1,0 +1,13 @@
+[
+  {
+    "name": "default",
+    "type": "postgres",
+    "host": "ep-rapid-truth-ad2e6rnq-pooler.c-2.us-east-1.aws.neon.tech",
+    "port": 5432,
+    "username": "neondb_owner",
+    "password": "npg_rFA9DgloybO0",
+    "database": "",
+    "synchronize": false,
+    "entities": ["entities/*.js"]
+  }
+]
