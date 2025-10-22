@@ -20,6 +20,23 @@ board.get("/", async (c) => {
   try {
     const boardRepo = AppDataSource.getRepository(TBoard);
     let data = await boardRepo.find({ order: { createdDt: "DESC" } });
+    result.data = data;
+    return c.json(result);
+  } catch (error: any) {
+    result.success = false;
+    result.msg = `서버 에러. ${error?.message}`;
+    return c.json(result);
+  }
+});
+
+// t_board 에서 id 로 데이터 가져오기 완성 시키기
+board.get("/get_memo_by_id", async (c) => {
+  let result: ResultType = {
+    success: true,
+    data: null,
+    msg: "",
+  };
+  try {
     return c.json(result);
   } catch (error: any) {
     result.success = false;
