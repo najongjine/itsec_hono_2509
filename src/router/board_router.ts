@@ -58,6 +58,20 @@ board.post("/upsert", async (c) => {
     msg: "",
   };
   try {
+    const body = await c?.req?.parseBody();
+    let id = Number(body["id"] ?? 0);
+    let title = String(body["title"]);
+    let content = String(body["content"]);
+    const boardRepo = AppDataSource.getRepository(TBoard);
+
+    let newBoard =
+      (await boardRepo.findOne({ where: { id: id } })) ?? new TBoard();
+    newBoard.title = title;
+    newBoard.content = content;
+
+    newBoard = await boardRepo.save(newBoard);
+    result.data = newBoard;
+
     return c.json(result);
   } catch (error: any) {
     result.success = false;
