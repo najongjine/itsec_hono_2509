@@ -97,10 +97,9 @@ board.post("/delete", async (c) => {
         // Raw SQL 쿼리를 사용하여 데이터 삭제
         // transactionalEntityManager를 사용하여 트랜잭션 내에서 쿼리 실행
         const rawDeleteResult = await transactionalEntityManager.query(
-          `DELETE FROM t_board WHERE id = ?`,
-          [id] // 쿼리 파라미터를 배열로 전달하여 SQL Injection 방지
+          `DELETE FROM t_board WHERE id = $1`,
+          [id]
         );
-
         return rawDeleteResult;
       }
     );

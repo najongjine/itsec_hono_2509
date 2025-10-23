@@ -19,8 +19,7 @@ app.get("/", (c) => {
 });
 
 import board from "./router/board_router.js";
-app.route("/board", board);
-
+app.route("/api/board", board);
 
 serve(
   {
