@@ -103,7 +103,7 @@ board.post("/delete", async (c) => {
         return rawDeleteResult;
       }
     );
-
+    result.data = deleteResult;
     return c.json(result);
   } catch (error: any) {
     result.success = false;
