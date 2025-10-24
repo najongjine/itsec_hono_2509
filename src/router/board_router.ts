@@ -90,6 +90,7 @@ board.post("/delete", async (c) => {
   try {
     const body = await c?.req?.parseBody();
     let id = Number(body["id"] ?? 0);
+    console.log(` delete id: ${id}`);
 
     // TypeORM의 transaction을 사용하여 데이터베이스 작업을 묶습니다.
     const deleteResult = await AppDataSource.manager.transaction(
