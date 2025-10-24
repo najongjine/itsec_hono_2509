@@ -1,8 +1,17 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
+import { cors } from "hono/cors";
+import * as dotenv from "dotenv";
 import { AppDataSource } from "./data-source1.js";
 
+const envFile =
+  process.env.NODE_ENV === "production"
+    ? ".env.production"
+    : ".env.development";
+dotenv.config({ path: envFile });
+
 const app = new Hono();
+app.use(cors());
 
 /** DB 연결 */
 AppDataSource.initialize()
