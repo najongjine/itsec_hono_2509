@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { AppDataSource } from "../data-source1.js";
 import { TBoard } from "../entities/TBoard.js";
 import { TUser } from "../entities/TUser.js";
-import { success } from "zod";
+import * as utils from "../utils/utils.js";
 
 const router = new Hono();
 interface ResultType {
@@ -51,7 +51,15 @@ router.post("/register", async (c) => {
     }
     user.username = username;
     user.password = password;
+    user.realName = real_name;
 
+    user = await userRepo.save(user);
+
+    let token = utils.generateToken(user, "90d");
+    result.data = {
+      userInfo: user,
+      token: token,
+    };
     return c.json(result);
   } catch (error: any) {
     result.success = false;
