@@ -109,8 +109,16 @@ router.post("/login", async (c) => {
     const userRepo = AppDataSource.getRepository(TUser);
 
     let user =
-      (await userRepo.findOne({ where: { username: username } })) ??
-      new TUser();
+      (await userRepo.findOne({
+        where: { username: username, password: password },
+      })) ?? new TUser();
+    const bVaid = await utils.comparePassword(password, user?.password ?? "");
+
+    if (!user?.id) {
+      result.success = false;
+      result.msg = `계정정보가 잘못됬습니다`;
+      return c.json(result);
+    }
 
     // 순수한 JSObject 로 변환
     user = JSON.parse(JSON.stringify(user));
