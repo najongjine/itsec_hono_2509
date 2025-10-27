@@ -18,9 +18,6 @@ router.get("/", async (c) => {
     msg: "",
   };
   try {
-    const boardRepo = AppDataSource.getRepository(TBoard);
-    let data = await boardRepo.find({ order: { createdDt: "DESC" } });
-    result.data = data;
     return c.json(result);
   } catch (error: any) {
     result.success = false;
@@ -30,7 +27,7 @@ router.get("/", async (c) => {
 });
 
 // t_board 에 데이터 추가&수정 기능 만들기
-router.post("/upsert", async (c) => {
+router.post("/register", async (c) => {
   let result: ResultType = {
     success: true,
     data: null,
@@ -38,18 +35,15 @@ router.post("/upsert", async (c) => {
   };
   try {
     const body = await c?.req?.parseBody();
-    let id = Number(body["id"] ?? 0);
-    let title = String(body["title"]);
-    let content = String(body["content"]);
-    const boardRepo = AppDataSource.getRepository(TBoard);
 
-    let newBoard =
-      (await boardRepo.findOne({ where: { id: id } })) ?? new TBoard();
-    newBoard.title = title;
-    newBoard.content = content;
+    let username = String(body["username"]);
+    let password = String(body["password"]);
+    let real_name = String(body["real_name"]);
+    const userRepo = AppDataSource.getRepository(TUser);
 
-    newBoard = await boardRepo.save(newBoard);
-    result.data = newBoard;
+    let user =
+      (await userRepo.findOne({ where: { username: username } })) ??
+      new TUser();
 
     return c.json(result);
   } catch (error: any) {
