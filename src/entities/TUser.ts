@@ -41,6 +41,20 @@ export class TUser {
   })
   updatedDt: Date | null;
 
+  @Column("character varying", {
+    name: "real_name",
+    nullable: true,
+    default: () => "''",
+  })
+  realName: string | null;
+
+  @Column("character varying", {
+    name: "profile_url",
+    nullable: true,
+    default: () => "''",
+  })
+  profileUrl: string | null;
+
   @OneToMany(() => TBoard, (tBoard) => tBoard.user)
   tBoards: TBoard[];
 }
