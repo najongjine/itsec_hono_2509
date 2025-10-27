@@ -4,14 +4,14 @@ import { TBoard } from "../entities/TBoard.js";
 import { TUser } from "../entities/TUser.js";
 import { success } from "zod";
 
-const board = new Hono();
+const router = new Hono();
 interface ResultType {
   success: boolean;
   data: any;
   msg: string;
 }
 // Get list of boards
-board.get("/", async (c) => {
+router.get("/", async (c) => {
   let result: ResultType = {
     success: true,
     data: null,
@@ -30,7 +30,7 @@ board.get("/", async (c) => {
 });
 
 // t_board 에 데이터 추가&수정 기능 만들기
-board.post("/upsert", async (c) => {
+router.post("/upsert", async (c) => {
   let result: ResultType = {
     success: true,
     data: null,
@@ -59,4 +59,4 @@ board.post("/upsert", async (c) => {
   }
 });
 
-export default board;
+export default router;
