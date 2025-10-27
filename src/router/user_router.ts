@@ -111,16 +111,13 @@ router.post("/login", async (c) => {
         where: { username: username },
       })) ?? new TUser();
     const bVaid = await utils.comparePassword(password, user?.password ?? "");
-    console.log(`user: ${user?.id}`);
-    console.log(`user: ${user?.password}`);
-    console.log(`pain pass: ${password}`);
-    console.log(`bVaid: ${bVaid}`);
     if (!user?.id || !bVaid) {
       result.success = false;
       result.msg = `계정정보가 잘못됬습니다`;
       return c.json(result);
     }
     user.password = "";
+    if (user?.realName) user.realName = utils.decryptData(user?.realName ?? "");
     // 순수한 JSObject 로 변환
     user = JSON.parse(JSON.stringify(user));
 
