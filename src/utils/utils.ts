@@ -69,7 +69,7 @@ export const decryptData = (encryptedData: string): string => {
   const encryptedText = Buffer.from(parts[1], "hex");
   const decipher = crypto.createDecipheriv(
     "aes-256-cbc",
-    Buffer.from(ENCRYPTION_KEY),
+    ENCRYPTION_KEY_BUFFER,
     iv
   );
   let decrypted = decipher.update(encryptedText);
