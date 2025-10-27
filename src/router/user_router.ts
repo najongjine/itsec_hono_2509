@@ -26,7 +26,6 @@ router.get("/", async (c) => {
   }
 });
 
-// t_board 에 데이터 추가&수정 기능 만들기
 router.post("/register", async (c) => {
   let result: ResultType = {
     success: true,
@@ -68,6 +67,51 @@ router.post("/register", async (c) => {
     user.realName = real_name;
 
     user = await userRepo.save(user);
+    // 순수한 JSObject 로 변환
+    user = JSON.parse(JSON.stringify(user));
+
+    let token = utils.generateToken(user, "90d");
+    if (token) token = utils.encryptData(token);
+    result.data = {
+      userInfo: user,
+      token: token,
+    };
+    return c.json(result);
+  } catch (error: any) {
+    result.success = false;
+    result.msg = `서버 에러. ${error?.message}`;
+    return c.json(result);
+  }
+});
+
+router.post("/login", async (c) => {
+  let result: ResultType = {
+    success: true,
+    data: null,
+    msg: "",
+  };
+  try {
+    const body = await c?.req?.parseBody();
+
+    let username = String(body["username"] ?? "");
+    username = username?.trim() ?? "";
+    let password = String(body["password"] ?? "");
+    password = password?.trim() ?? "";
+
+    if (!username || !password) {
+      result.success = false;
+      result.msg = `유저네임과 패스워드를 입력해 주세요`;
+      return c.json(result);
+    }
+    password = await utils.hashPassword(password);
+    console.log(`password: ${password}`);
+
+    const userRepo = AppDataSource.getRepository(TUser);
+
+    let user =
+      (await userRepo.findOne({ where: { username: username } })) ??
+      new TUser();
+
     // 순수한 JSObject 로 변환
     user = JSON.parse(JSON.stringify(user));
 
