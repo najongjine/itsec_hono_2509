@@ -49,6 +49,8 @@ router.post("/register", async (c) => {
       result.msg = `이미 가입한 username 입니다`;
       return c.json(result);
     }
+    user.username = username;
+    user.password = password;
 
     return c.json(result);
   } catch (error: any) {
