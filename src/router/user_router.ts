@@ -103,8 +103,6 @@ router.post("/login", async (c) => {
       result.msg = `유저네임과 패스워드를 입력해 주세요`;
       return c.json(result);
     }
-    password = await utils.hashPassword(password);
-    console.log(`password: ${password}`);
 
     const userRepo = AppDataSource.getRepository(TUser);
 
@@ -114,6 +112,8 @@ router.post("/login", async (c) => {
       })) ?? new TUser();
     const bVaid = await utils.comparePassword(password, user?.password ?? "");
     console.log(`user: ${user?.id}`);
+    console.log(`user: ${user?.password}`);
+    console.log(`pain pass: ${password}`);
     console.log(`bVaid: ${bVaid}`);
     if (!user?.id || !bVaid) {
       result.success = false;
