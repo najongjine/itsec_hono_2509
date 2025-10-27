@@ -64,6 +64,7 @@ router.post("/register", async (c) => {
     user.realName = real_name;
 
     user = await userRepo.save(user);
+    user = JSON.parse(JSON.stringify(user));
 
     let token = utils.generateToken(user, "90d");
     result.data = {
