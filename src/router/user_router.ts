@@ -36,9 +36,19 @@ router.post("/register", async (c) => {
   try {
     const body = await c?.req?.parseBody();
 
-    let username = String(body["username"]);
-    let password = String(body["password"]);
-    let real_name = String(body["real_name"]);
+    let username = String(body["username"]) ?? "";
+    username = username?.trim() ?? "";
+    let password = String(body["password"]) ?? "";
+    password = password?.trim() ?? "";
+    let real_name = String(body["real_name"]) ?? "";
+    real_name = real_name?.trim() ?? "";
+
+    if (!username || !password) {
+      result.success = false;
+      result.msg = `이미 가입한 username 입니다`;
+      return c.json(result);
+    }
+
     const userRepo = AppDataSource.getRepository(TUser);
 
     let user =
