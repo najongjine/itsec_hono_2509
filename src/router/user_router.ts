@@ -45,7 +45,7 @@ router.post("/register", async (c) => {
 
     if (!username || !password) {
       result.success = false;
-      result.msg = `이미 가입한 username 입니다`;
+      result.msg = `유저네임과 패스워드를 입력해 주세요`;
       return c.json(result);
     }
 
