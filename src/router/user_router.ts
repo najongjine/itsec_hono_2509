@@ -36,11 +36,11 @@ router.post("/register", async (c) => {
   try {
     const body = await c?.req?.parseBody();
 
-    let username = String(body["username"]) ?? "";
+    let username = String(body["username"] ?? "");
     username = username?.trim() ?? "";
-    let password = String(body["password"]) ?? "";
+    let password = String(body["password"] ?? "");
     password = password?.trim() ?? "";
-    let real_name = String(body["real_name"]) ?? "";
+    let real_name = String(body["real_name"] ?? "");
     real_name = real_name?.trim() ?? "";
 
     if (!username || !password) {
@@ -64,6 +64,7 @@ router.post("/register", async (c) => {
     user.realName = real_name;
 
     user = await userRepo.save(user);
+    // 순수한 JSObject 로 변환
     user = JSON.parse(JSON.stringify(user));
 
     let token = utils.generateToken(user, "90d");
