@@ -44,6 +44,11 @@ router.post("/register", async (c) => {
     let user =
       (await userRepo.findOne({ where: { username: username } })) ??
       new TUser();
+    if (user?.id) {
+      result.success = false;
+      result.msg = `이미 가입한 username 입니다`;
+      return c.json(result);
+    }
 
     return c.json(result);
   } catch (error: any) {
