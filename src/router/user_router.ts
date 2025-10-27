@@ -72,6 +72,7 @@ router.post("/register", async (c) => {
     user = JSON.parse(JSON.stringify(user));
 
     let token = utils.generateToken(user, "90d");
+    if (token) token = utils.encryptData(token);
     result.data = {
       userInfo: user,
       token: token,
