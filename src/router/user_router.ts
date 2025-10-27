@@ -48,7 +48,10 @@ router.post("/register", async (c) => {
       result.msg = `유저네임과 패스워드를 입력해 주세요`;
       return c.json(result);
     }
-
+    password = await utils.hashPassword(password);
+    console.log(`password: ${password}`);
+    if (real_name) real_name = utils.encryptData(real_name);
+    console.log(`real_name: ${real_name}`);
     const userRepo = AppDataSource.getRepository(TUser);
 
     let user =
@@ -59,6 +62,7 @@ router.post("/register", async (c) => {
       result.msg = `이미 가입한 username 입니다`;
       return c.json(result);
     }
+    console.log(`b4 save`);
     user.username = username;
     user.password = password;
     user.realName = real_name;
