@@ -110,10 +110,11 @@ router.post("/login", async (c) => {
 
     let user =
       (await userRepo.findOne({
-        where: { username: username, password: password },
+        where: { username: username },
       })) ?? new TUser();
     const bVaid = await utils.comparePassword(password, user?.password ?? "");
-
+    console.log(`user: ${user?.id}`);
+    console.log(`bVaid: ${bVaid}`);
     if (!user?.id || !bVaid) {
       result.success = false;
       result.msg = `계정정보가 잘못됬습니다`;
