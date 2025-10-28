@@ -55,6 +55,41 @@ export class TUser {
   })
   profileUrl: string | null;
 
+  @Column("character varying", {
+    name: "uid",
+    nullable: true,
+    default: () => "''",
+  })
+  uid: string | null;
+
+  @Column("character varying", {
+    name: "email",
+    nullable: true,
+    default: () => "''",
+  })
+  email: string | null;
+
+  @Column("character varying", {
+    name: "display_name",
+    nullable: true,
+    default: () => "''",
+  })
+  displayName: string | null;
+
+  @Column("character varying", {
+    name: "provider_id",
+    nullable: true,
+    default: () => "''",
+  })
+  providerId: string | null;
+
+  @Column("character varying", {
+    name: "metadata",
+    nullable: true,
+    default: () => "''",
+  })
+  metadata: string | null;
+
   @OneToMany(() => TBoard, (tBoard) => tBoard.user)
   tBoards: TBoard[];
 }
