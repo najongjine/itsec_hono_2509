@@ -177,6 +177,16 @@ router.post("/login_v2", async (c) => {
       (await userRepo.findOne({
         where: { uid: uid },
       })) ?? new TUser();
+    // user 라는 객체에 데이터 채워져 있어? 아니면 아무것도 없어?
+    if (!user?.uid) {
+      user.profileUrl = profileUrl;
+      user.uid = uid;
+      if (email) user.email = utils.encryptData(email);
+      user.displayName = displayName;
+      user.providerId = providerId;
+      user.metadata = metadata;
+      user = await userRepo.save(user);
+    }
 
     // 순수한 JSObject 로 변환
     user = JSON.parse(JSON.stringify(user));
