@@ -188,6 +188,7 @@ router.post("/login_v2", async (c) => {
       user = await userRepo.save(user);
     }
 
+    if (user.email) user.email = utils.decryptData(user.email);
     // 순수한 JSObject 로 변환
     user = JSON.parse(JSON.stringify(user));
 
