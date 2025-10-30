@@ -206,4 +206,33 @@ router.post("/login_v2", async (c) => {
   }
 });
 
+router.post("/verify_token", async (c) => {
+  let result: ResultType = {
+    success: true,
+    data: null,
+    msg: "",
+  };
+  try {
+    const body = await c?.req?.json();
+    let token = String(body?.token ?? "");
+    console.log(token);
+    token = token?.trim() ?? "";
+    if (token) token = utils.decryptData(token);
+
+    let payload = utils.verifyToken(token);
+    console.log(`## payload : `, payload);
+    if (!payload?.id) {
+      result.success = false;
+      result.msg = `토큰이 잘못됬습니다`;
+      return c.json(result);
+    }
+
+    return c.json(result);
+  } catch (error: any) {
+    result.success = false;
+    result.msg = `서버 에러. ${error?.message}`;
+    return c.json(result);
+  }
+});
+
 export default router;

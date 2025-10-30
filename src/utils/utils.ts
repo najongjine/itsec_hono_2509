@@ -86,7 +86,7 @@ export const generateToken = (
   return jwt.sign(payload, JWT_SECRET, { expiresIn });
 };
 
-// JWT 검증
+/** JWT 검증. return := payload */
 export const verifyToken = (token: string): any => {
   try {
     return jwt.verify(token, JWT_SECRET);
