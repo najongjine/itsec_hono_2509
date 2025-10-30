@@ -215,7 +215,6 @@ router.post("/verify_token", async (c) => {
   try {
     const body = await c?.req?.json();
     let token = String(body?.token ?? "");
-    console.log(token);
     token = token?.trim() ?? "";
     if (token) token = utils.decryptData(token);
 
