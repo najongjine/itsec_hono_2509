@@ -18,8 +18,32 @@ board.get("/", async (c) => {
     msg: "",
   };
   try {
+    const page = Number(c?.req?.query("page") ?? 1);
+    const item_limit = Number(c?.req?.query("item_limit") ?? 1000);
+    const offset = (page - 1) * item_limit;
     const boardRepo = AppDataSource.getRepository(TBoard);
-    let data = await boardRepo.find({ order: { createdDt: "DESC" } });
+    let data: any = await AppDataSource.query(
+      `
+          SELECT
+          b.id as board_id
+          ,b.user_id
+          ,b.created_dt as board_created_dt
+          ,b.updated_dt as board_updated_dt
+          ,b.title
+          ,b.content
+          ,u.uid
+          ,u.profile_url
+          ,u.email
+          ,u.display_name as user_display_name
+          FROM t_board as b
+          LEFT JOIN t_user as u ON u.id = b.user_id
+          ORDER BY b.created_dt DESC
+          LIMIT $1 
+          OFFSET $2
+          `,
+      [item_limit, offset]
+    );
+    //let data = await boardRepo.find({ order: { createdDt: "DESC" } });
     result.data = data;
     return c.json(result);
   } catch (error: any) {
