@@ -137,4 +137,21 @@ board.post("/delete", async (c) => {
   }
 });
 
+board.post("/img", async (c) => {
+  let result: ResultType = {
+    success: true,
+    data: null,
+    msg: "",
+  };
+  try {
+    const body = await c?.req?.parseBody();
+
+    return c.json(result);
+  } catch (error: any) {
+    result.success = false;
+    result.msg = `서버 에러. ${error?.message}`;
+    return c.json(result);
+  }
+});
+
 export default board;
