@@ -4,6 +4,7 @@ import { TBoard } from "../entities/TBoard.js";
 import { TUser } from "../entities/TUser.js";
 import { writeFile } from "fs/promises";
 import { join } from "path";
+import * as utils from "../utils/utils.js";
 
 const board = new Hono();
 interface ResultType {
@@ -163,7 +164,8 @@ board.post("/img", async (c) => {
 
           // 3. 저장할 파일 경로 생성 (중복 방지를 위해 타임스탬프 등을 사용하는 것을 권장)
           // 여기서는 간단히 원본 파일명 그대로 사용합니다.
-          const savePath = join(process.env.UPLOAD_DIR, file.name);
+          const uniqueFileName = utils.createUniqueFileName();
+          const savePath = join(process.env.UPLOAD_DIR, uniqueFileName);
 
           // 4. 하드디스크에 파일 저장
           await writeFile(savePath, buffer);
