@@ -176,6 +176,7 @@ board.post("/img", async (c) => {
             name: file.name,
             size: file.size,
             type: file.type,
+            uniqueFileName: uniqueFileName,
             path: savePath, // 저장된 경로를 응답에 포함
           };
         })
