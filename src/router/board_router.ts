@@ -147,7 +147,26 @@ board.post("/img", async (c) => {
     const body = await c?.req?.parseBody();
     let imgs: any = body["imgs"];
 
-    const filesArray: File[] = Array.isArray(imgs) ? imgs : [imgs];
+    if (imgs) {
+      const filesArray: File[] = Array.isArray(imgs) ? imgs : [imgs];
+      const results = filesArray.map((file) => {
+        // 파일의 이름, 타입, 크기 등에 접근할 수 있습니다.
+        console.log(
+          `파일 이름: ${file.name}, 타입: ${file.type}, 크기: ${file.size} bytes`
+        );
+
+        // 이 곳에서 파일을 저장소(로컬 디스크, S3 등)에 저장하는 로직을 추가합니다.
+        // 예: const fileBuffer = await file.arrayBuffer();
+        //     await saveToStorage(file.name, fileBuffer);
+
+        return {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+        };
+      });
+      result.data = results;
+    }
 
     return c.json(result);
   } catch (error: any) {
