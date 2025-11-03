@@ -2,7 +2,8 @@ import { Hono } from "hono";
 import { AppDataSource } from "../data-source1.js";
 import { TBoard } from "../entities/TBoard.js";
 import { TUser } from "../entities/TUser.js";
-import { success } from "zod";
+import { writeFile } from "fs/promises";
+import { join } from "path";
 
 const board = new Hono();
 interface ResultType {
@@ -154,10 +155,6 @@ board.post("/img", async (c) => {
         console.log(
           `파일 이름: ${file.name}, 타입: ${file.type}, 크기: ${file.size} bytes`
         );
-
-        // 이 곳에서 파일을 저장소(로컬 디스크, S3 등)에 저장하는 로직을 추가합니다.
-        // 예: const fileBuffer = await file.arrayBuffer();
-        //     await saveToStorage(file.name, fileBuffer);
 
         return {
           name: file.name,
