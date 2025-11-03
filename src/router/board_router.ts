@@ -153,11 +153,6 @@ board.post("/img", async (c) => {
       const filesArray: File[] = Array.isArray(imgs) ? imgs : [imgs];
       const results = await Promise.all(
         filesArray.map(async (file) => {
-          // 파일의 이름, 타입, 크기 등에 접근할 수 있습니다.
-          console.log(
-            `파일 이름: ${file.name}, 타입: ${file.type}, 크기: ${file.size} bytes`
-          );
-
           // 2. 파일 데이터를 Node.js Buffer로 변환
           const arrayBuffer = await file.arrayBuffer();
           const buffer = Buffer.from(arrayBuffer);
