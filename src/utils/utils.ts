@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 //@ts-ignore
 import crypto from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
 // 🔑 키 길이를 AES-256-CBC 요구사항인 32바이트로 맞추는 유틸리티 함수
 // 길이가 부족하면 0x00으로 패딩하고, 초과하면 잘라냅니다. (보안 경고)
@@ -105,3 +106,26 @@ export const decodeToken = (token: string): object | null => {
     return null;
   }
 };
+
+/**
+ * 현재 시간(밀리초)과 UUID를 조합하여 파일 이름으로 안전하게 사용할 수 있는 문자열을 생성합니다.
+ * 생성된 문자열의 길이는 255자 미만입니다.
+ * (UUID: 36자, 밀리초: 약 13자, 구분자: 1자 = 최대 약 50자)
+ * * @returns {string} 조합된 파일 이름 문자열 (예: "1730635200000-a1b2c3d4-e5f6-4000-8000-000000000000")
+ */
+export function createUniqueFileName(): string {
+  // 1. 현재 시간을 밀리초 단위로 가져옵니다.
+  const timestamp = Date.now().toString();
+
+  // 2. UUID v4를 생성합니다. (예: "a1b2c3d4-e5f6-4000-8000-000000000000")
+  // 이 문자열은 파일 이름으로 안전하게 사용될 수 있는 하이픈을 포함합니다.
+  const uniqueId = uuidv4();
+
+  // 3. 두 값을 하이픈(-)으로 연결합니다.
+  const uniqueFileName = `${timestamp}-${uniqueId}`;
+
+  // 문자열 길이 확인 (255자 미만은 확실히 만족합니다)
+  // console.log(`생성된 파일 이름: ${uniqueFileName}, 길이: ${uniqueFileName.length}`);
+
+  return uniqueFileName;
+}
