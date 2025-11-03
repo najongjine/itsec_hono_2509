@@ -145,6 +145,9 @@ board.post("/img", async (c) => {
   };
   try {
     const body = await c?.req?.parseBody();
+    let imgs: any = body["imgs"];
+
+    const filesArray: File[] = Array.isArray(imgs) ? imgs : [imgs];
 
     return c.json(result);
   } catch (error: any) {
