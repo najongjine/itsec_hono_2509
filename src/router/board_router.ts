@@ -150,18 +150,34 @@ board.post("/img", async (c) => {
 
     if (imgs) {
       const filesArray: File[] = Array.isArray(imgs) ? imgs : [imgs];
-      const results = filesArray.map((file) => {
-        // 파일의 이름, 타입, 크기 등에 접근할 수 있습니다.
-        console.log(
-          `파일 이름: ${file.name}, 타입: ${file.type}, 크기: ${file.size} bytes`
-        );
+      const results = await Promise.all(
+        filesArray.map(async (file) => {
+          // 파일의 이름, 타입, 크기 등에 접근할 수 있습니다.
+          console.log(
+            `파일 이름: ${file.name}, 타입: ${file.type}, 크기: ${file.size} bytes`
+          );
 
-        return {
-          name: file.name,
-          size: file.size,
-          type: file.type,
-        };
-      });
+          // 2. 파일 데이터를 Node.js Buffer로 변환
+          const arrayBuffer = await file.arrayBuffer();
+          const buffer = Buffer.from(arrayBuffer);
+
+          // 3. 저장할 파일 경로 생성 (중복 방지를 위해 타임스탬프 등을 사용하는 것을 권장)
+          // 여기서는 간단히 원본 파일명 그대로 사용합니다.
+          const savePath = join(process.env.UPLOAD_DIR, file.name);
+
+          // 4. 하드디스크에 파일 저장
+          await writeFile(savePath, buffer);
+
+          console.log(`파일 저장 완료: ${savePath}`);
+
+          return {
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            path: savePath, // 저장된 경로를 응답에 포함
+          };
+        })
+      );
       result.data = results;
     }
 
