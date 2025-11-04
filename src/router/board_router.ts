@@ -2,8 +2,8 @@ import { Hono } from "hono";
 import { AppDataSource } from "../data-source1.js";
 import { TBoard } from "../entities/TBoard.js";
 import { TUser } from "../entities/TUser.js";
-import { writeFile } from "fs/promises";
-import { join, extname } from "path";
+import { writeFile, mkdir } from "fs/promises";
+import { join, extname, dirname } from "path";
 import * as utils from "../utils/utils.js";
 import { TBoardImgs } from "../entities/TBoardImgs.js";
 
@@ -113,6 +113,16 @@ board.post("/upsert", async (c) => {
           let uniqueFileName = utils.createUniqueFileName();
           uniqueFileName = `${uniqueFileName}${ext}`;
           const savePath = join(process.env.UPLOAD_DIR, uniqueFileName);
+          // ⭐️ 추가된 로직: 폴더가 없으면 생성 ⭐️
+          const dir = dirname(savePath); // 최종 경로에서 디렉터리 경로만 추출
+          try {
+            // { recursive: true } 옵션을 사용하여 중간 디렉터리가 없어도 모두 생성
+            await mkdir(dir, { recursive: true });
+          } catch (error) {
+            // 폴더 생성에 실패하면 오류 로깅 (권장)
+            console.error(`디렉터리 생성 실패: ${dir}`, error);
+            throw new Error("파일 저장 경로 생성 실패");
+          }
 
           // 4. 하드디스크에 파일 저장
           await writeFile(savePath, buffer);
