@@ -216,12 +216,9 @@ router.post("/verify_token", async (c) => {
     const body = await c?.req?.json();
     let token = String(body?.token ?? "");
     token = token?.trim() ?? "";
-    console.log(`## token : `, token);
     if (token) token = utils.decryptData(token);
-    console.log(`## token2 : `, token);
 
     let payload = utils.verifyToken(token);
-    console.log(`## payload : `, payload);
     if (!payload?.id) {
       result.success = false;
       result.msg = `토큰이 잘못됬습니다`;
