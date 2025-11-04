@@ -88,6 +88,7 @@ board.post("/upsert", async (c) => {
     let id = Number(body["id"] ?? 0);
     let title = String(body["title"]);
     let content = String(body["content"]);
+    let imgs: any = body["imgs"];
     const boardRepo = AppDataSource.getRepository(TBoard);
 
     let newBoard =
@@ -97,6 +98,37 @@ board.post("/upsert", async (c) => {
 
     newBoard = await boardRepo.save(newBoard);
     result.data = newBoard;
+
+    if (imgs) {
+      const filesArray: File[] = Array.isArray(imgs) ? imgs : [imgs];
+      const results = await Promise.all(
+        filesArray.map(async (file) => {
+          // 2. 파일 데이터를 Node.js Buffer로 변환
+          const arrayBuffer = await file.arrayBuffer();
+          const buffer = Buffer.from(arrayBuffer);
+
+          // 3. 저장할 파일 경로 생성 (중복 방지를 위해 타임스탬프 등을 사용하는 것을 권장)
+          const ext = extname(file.name);
+          let uniqueFileName = utils.createUniqueFileName();
+          uniqueFileName = `${uniqueFileName}${ext}`;
+          const savePath = join(process.env.UPLOAD_DIR, uniqueFileName);
+
+          // 4. 하드디스크에 파일 저장
+          await writeFile(savePath, buffer);
+
+          console.log(`파일 저장 완료: ${savePath}`);
+
+          return {
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            uniqueFileName: uniqueFileName,
+            path: savePath, // 저장된 경로를 응답에 포함
+          };
+        })
+      );
+      result.data = results;
+    }
 
     return c.json(result);
   } catch (error: any) {
