@@ -90,7 +90,6 @@ board.post("/upsert", async (c) => {
     let title = String(body["title"]);
     let content = String(body["content"]);
     let imgs: any = body["imgs[]"];
-    console.log(`imgs : `, imgs);
     const boardRepo = AppDataSource.getRepository(TBoard);
 
     let newBoard =
