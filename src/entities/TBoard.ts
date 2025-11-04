@@ -4,9 +4,11 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { TUser } from "./TUser";
+import { TBoardImgs } from "./TBoardImgs";
 
 @Index("t_board_pkey", ["id"], { unique: true })
 @Entity("t_board", { schema: "public" })
@@ -48,4 +50,7 @@ export class TBoard {
   })
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
   user: TUser;
+
+  @OneToMany(() => TBoardImgs, (tBoardImgs) => tBoardImgs.board)
+  tBoardImgs: TBoardImgs[];
 }
