@@ -5,6 +5,7 @@ import { TUser } from "../entities/TUser.js";
 import { writeFile } from "fs/promises";
 import { join, extname } from "path";
 import * as utils from "../utils/utils.js";
+import { TBoardImgs } from "../entities/TBoardImgs.js";
 
 const board = new Hono();
 interface ResultType {
@@ -117,6 +118,16 @@ board.post("/upsert", async (c) => {
           await writeFile(savePath, buffer);
 
           console.log(`파일 저장 완료: ${savePath}`);
+
+          let newimg = new TBoardImgs();
+          newimg.filesize = file?.size ?? 0;
+          newimg.board = newBoard;
+          newimg.imgurl = savePath;
+          newimg.minetype = file.type;
+          newimg.originalFilename = file.name;
+          newimg.uniqueFilename = uniqueFileName;
+          const fileRepo = AppDataSource.getRepository(TBoardImgs);
+          await fileRepo.save(newimg);
 
           return {
             name: file.name,
