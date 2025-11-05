@@ -120,9 +120,15 @@ board.post("/upsert", async (c) => {
 
     let newBoard =
       (await boardRepo.findOne({ where: { id: id } })) ?? new TBoard();
+    if (newBoard?.id && user?.id != newBoard.user?.id) {
+      // 수정모드에서, 작성자와 수정하려는 사람이 다를때, 퇴출 시킬거임
+      result.success = false;
+      result.msg = `인증에러. 작성자와 수정자가 다름`;
+      return c.json(result);
+    }
     newBoard.title = title;
     newBoard.content = content;
-    newBoard.u;
+    newBoard.user = user;
     newBoard = await boardRepo.save(newBoard);
     result.data = newBoard;
 
