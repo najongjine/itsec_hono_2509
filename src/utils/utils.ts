@@ -129,3 +129,49 @@ export function createUniqueFileName(): string {
 
   return uniqueFileName;
 }
+
+/**
+ * 이미지 경로가 폴더로 되있으면, 이걸 서버에서 직접 스트리밍 하는 주소로 바꿉니다.
+ * 해당 프로젝트 게시판 전용으로 만들어졌습니다. 범용 컴포넌트 아닙니다.
+ * localhost:3000 부분은 알아서 수정 하세요.
+ */
+export function makeBoardImgURL(data: any): string {
+  try {
+    console.log(`# mkburl data: `, data);
+    let metaData: any = {};
+    metaData.dir = data?.imgurl ?? "";
+    metaData.mimetype = data?.minetype ?? "";
+    metaData = JSON.stringify(metaData);
+    metaData = Buffer.from(metaData).toString("base64url");
+    let imgurl = `http://localhost:3000/api/stream/img?data=${metaData}`;
+    return imgurl;
+  } catch (error: any) {
+    console.log(`# mkburl data err: `, data);
+    return "/no_img.jpg";
+  }
+}
+/**
+ * 문자열이 일반적인 폴더/파일 경로 형식인지 검사합니다.
+ * 이 정규표현식은 완벽한 유효성 검사(실제 파일 시스템 규칙)가 아닌,
+ * 경로 구조(슬래시, 점, 파일명 등)를 포함하는지 확인하는 데 중점을 둡니다.
+ * @param pathString 검사할 문자열
+ * @returns 경로 형식인 경우 true, 아니면 false
+ */
+export function isPathFormat(pathString: string): boolean {
+  if (typeof pathString !== "string" || pathString.trim() === "") {
+    return false;
+  }
+
+  // 포괄적인 경로 형식 정규표현식
+  // 1. 드라이브 문자 (C:\) 또는 유닉스 루트 (/)로 시작
+  // 2. 경로 구분자 (/, \)와 일반적인 문자(문자, 숫자, 하이픈, 언더바, 마침표) 포함
+  // 3. UNC 경로 (\\server\share)도 허용
+  const pathRegex = new RegExp(
+    /^((?:[a-zA-Z]:)?[\\\/]|\.{1,2}[\\\/]?|(?:[a-zA-Z0-9_-]+\/|\\)+|(?:[a-zA-Z]:))?(?:[a-zA-Z0-9_\-.\s]+[\\\/]?)*[a-zA-Z0-9_\-.\s]+$/,
+    "i" // 대소문자 구분 없음
+  );
+
+  // 경로에 '?'나 '*' 같은 glob 문자가 포함된 경우를 단순 경로로 간주하지 않을 수 있습니다.
+  // 여기서는 일반적인 경로 형식만 확인합니다.
+  return pathRegex.test(pathString);
+}
