@@ -119,7 +119,13 @@ board.post("/upsert", async (c) => {
     const boardRepo = AppDataSource.getRepository(TBoard);
 
     let newBoard =
-      (await boardRepo.findOne({ where: { id: id } })) ?? new TBoard();
+      (await boardRepo.findOne({
+        where: { id: id },
+        relations: { user: true },
+      })) ?? new TBoard();
+    console.log(
+      `# newBoard?.id: ${newBoard?.id}, user?.id: ${user?.id}, newBoard.user?.id: ${newBoard.user?.id}`
+    );
     if (newBoard?.id && user?.id != newBoard.user?.id) {
       // 수정모드에서, 작성자와 수정하려는 사람이 다를때, 퇴출 시킬거임
       result.success = false;
