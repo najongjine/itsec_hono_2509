@@ -104,7 +104,9 @@ board.post("/upsert", async (c) => {
       token = "";
     }
     const userInfo = utils.verifyToken(token);
-    if (!Number(userInfo?.id)) {
+    const userRepo = AppDataSource.getRepository(TUser);
+    let user = await userRepo.findOne({ where: { id: userInfo?.id ?? 0 } });
+    if (user?.id) {
       result.success = false;
       result.msg = `인증에러. 로그인을 해주세요 `;
       return c.json(result);
@@ -120,7 +122,7 @@ board.post("/upsert", async (c) => {
       (await boardRepo.findOne({ where: { id: id } })) ?? new TBoard();
     newBoard.title = title;
     newBoard.content = content;
-
+    newBoard.u;
     newBoard = await boardRepo.save(newBoard);
     result.data = newBoard;
 
