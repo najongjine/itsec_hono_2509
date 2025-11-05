@@ -106,7 +106,7 @@ board.post("/upsert", async (c) => {
     const userInfo = utils.verifyToken(token);
     const userRepo = AppDataSource.getRepository(TUser);
     let user = await userRepo.findOne({ where: { id: userInfo?.id ?? 0 } });
-    if (user?.id) {
+    if (!user?.id) {
       result.success = false;
       result.msg = `인증에러. 로그인을 해주세요 `;
       return c.json(result);
