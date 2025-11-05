@@ -21,6 +21,14 @@ board.get("/", async (c) => {
     msg: "",
   };
   try {
+    const authHeader = String(c?.req?.header("Authorization") ?? "");
+    let token: any = authHeader?.split(" ");
+    try {
+      token = token[1];
+    } catch (error: any) {
+      token = "";
+    }
+
     const page = Number(c?.req?.query("page") ?? 1);
     const item_limit = Number(c?.req?.query("item_limit") ?? 1000);
     const offset = (page - 1) * item_limit;
