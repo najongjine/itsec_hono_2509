@@ -25,9 +25,11 @@ board.get("/", async (c) => {
     let token: any = authHeader?.split(" ");
     try {
       token = token[1];
+      token = utils.decryptData(token);
     } catch (error: any) {
       token = "";
     }
+    const userInfo = utils.verifyToken(token);
 
     const page = Number(c?.req?.query("page") ?? 1);
     const item_limit = Number(c?.req?.query("item_limit") ?? 1000);
@@ -93,6 +95,20 @@ board.post("/upsert", async (c) => {
     msg: "",
   };
   try {
+    const authHeader = String(c?.req?.header("Authorization") ?? "");
+    let token: any = authHeader?.split(" ");
+    try {
+      token = token[1];
+      token = utils.decryptData(token);
+    } catch (error: any) {
+      token = "";
+    }
+    const userInfo = utils.verifyToken(token);
+    if (!Number(userInfo?.id)) {
+      result.success = false;
+      result.msg = `인증에러. 로그인을 해주세요 `;
+      return c.json(result);
+    }
     const body = await c?.req?.parseBody();
     let id = Number(body["id"] ?? 0);
     let title = String(body["title"]);
