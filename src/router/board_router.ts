@@ -86,7 +86,10 @@ board.get("/get_memo_by_id", async (c) => {
         img.imgurl = utils.makeBoardImgURL(img);
       console.log(`# imgurl: ${img.imgurl}`);
     }
-    result.data = data;
+    result.data = {
+      board: data,
+      imgs: imgs,
+    };
     return c.json(result);
   } catch (error: any) {
     result.success = false;
