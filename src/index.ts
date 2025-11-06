@@ -28,9 +28,11 @@ app.get("/", (c) => {
 });
 
 import board from "./router/board_router.js";
+import board_v2 from "./router/board_router_v2.js";
 import userRouter from "./router/user_router.js";
 import streamRouter from "./router/stream_router.js";
 app.route("/api/board", board);
+app.route("/api/board_v2", board_v2);
 app.route("/api/user", userRouter);
 app.route("/api/stream", streamRouter);
 

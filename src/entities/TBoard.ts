@@ -44,6 +44,16 @@ export class TBoard {
   })
   content: string | null;
 
+  @Column("character varying", {
+    name: "html_content",
+    nullable: true,
+    default: () => "''",
+  })
+  htmlContent: string | null;
+
+  @Column("jsonb", { name: "json_content", nullable: true })
+  jsonContent: object | null;
+
   @ManyToOne(() => TUser, (tUser) => tUser.tBoards, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
