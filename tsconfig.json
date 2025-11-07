@@ -12,7 +12,7 @@
     "emitDecoratorMetadata": true,
 
     "strict": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "skipLibCheck": true,
     "types": ["node"],
     "jsx": "react-jsx",
