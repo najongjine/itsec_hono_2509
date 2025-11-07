@@ -39,7 +39,7 @@ app.route("/api/stream", streamRouter);
 serve(
   {
     fetch: app.fetch,
-    port: 3000,
+    port: parseInt(process.env.PORT || "7860"),
   },
   (info) => {
     console.log(`Server is running on http://localhost:${info.port}`);
