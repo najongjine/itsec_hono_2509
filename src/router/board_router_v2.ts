@@ -79,17 +79,7 @@ board.get("/get_memo_by_id", async (c) => {
     const boardRepo = AppDataSource.getRepository(TBoard);
     const boardImgsRepo = AppDataSource.getRepository(TBoardImgs);
     let data = await boardRepo.findOne({ where: { id: id } });
-    let imgs =
-      (await boardImgsRepo.find({ where: { board: { id: data?.id } } })) ?? [];
-    for (const img of imgs) {
-      if (utils.isPathFormat(img?.imgurl ?? ""))
-        img.imgurl = utils.makeBoardImgURL(img);
-      console.log(`# imgurl: ${img.imgurl}`);
-    }
-    result.data = {
-      board: data,
-      imgs: imgs,
-    };
+    result.data = data;
     return c.json(result);
   } catch (error: any) {
     result.success = false;
